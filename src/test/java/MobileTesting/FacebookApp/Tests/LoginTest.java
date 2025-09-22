@@ -25,7 +25,7 @@ public class LoginTest extends BaseTest {
 
     @DataProvider(name = "loginData")
     public Iterator<Object[]> loginDataProvider() throws IOException {
-        String filePath = "src/test/testdata/loginData.csv";
+        String filePath = "src/test/Resources/loginData.csv";
         List<Object[]> data = new ArrayList<>();
 
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
