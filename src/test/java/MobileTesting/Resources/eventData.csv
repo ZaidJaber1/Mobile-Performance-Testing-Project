@@ -1,0 +1,5 @@
+eventName,details,location,startMonth,startDay,startYear,startHour,startMinute,startAmpm,endMonth,endDay,endYear,endHour,endMinute,endAmpm
+Past Event,,,September,1,2025,10,10,AM,September,2,2025,9,10,PM
+,Empty Case,,November,10,2025,10,10,AM,November,20,2025,9,10,PM
+Test Event 1,Details 1,Jerusalem Capital of Palestine,November,10,2025,10,10,AM,November,20,2025,9,10,PM
+14 Days,,,November,10,2025,10,10,AM,November,30,2025,9,10,PM
