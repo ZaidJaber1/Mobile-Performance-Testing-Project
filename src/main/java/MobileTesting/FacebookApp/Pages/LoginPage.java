@@ -5,6 +5,7 @@ import io.appium.java_client.android.AndroidDriver;
 import org.openqa.selenium.By;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import io.appium.java_client.MobileBy;
 
 public class LoginPage {
 
@@ -13,39 +14,48 @@ public class LoginPage {
 
     public LoginPage(AndroidDriver<MobileElement> driver) {
         this.driver = driver;
-        this.wait = new WebDriverWait(driver, 10); // Appium 7.6.0
+        this.wait = new WebDriverWait(driver, 10);
     }
 
-    // Locators
-    private By alreadyHaveAccount = By.xpath("//android.view.View[@content-desc='I already have an account']");
-    private By emailField = By.xpath("//android.widget.EditText[@content-desc='Mobile number or email,']");
-    private By passwordField = By.xpath("//android.widget.EditText[@content-desc='Password,']");
-    private By loginButton = By.xpath("//android.view.View[@content-desc='Log in']");
+    private By alreadyHaveAccount = MobileBy.AndroidUIAutomator(
+            "new UiSelector().text(\"I already have an account\")");
+    private By emailField = MobileBy.AccessibilityId("Mobile number or email,");
+    private By passwordField = MobileBy.AccessibilityId("Password,");
+    private By loginButton = MobileBy.AndroidUIAutomator("new UiSelector().text(\"Log in\")");
+    private By homePageElement = MobileBy.AccessibilityId("Make a post on Facebook");
 
-    // Popups
-    private By invalidPasswordBack = By.xpath("//android.widget.Button[@content-desc='Back']/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.widget.ImageView");
-    private By bothInvalidTryAgain = By.xpath("//android.widget.Button[@resource-id='com.facebook.katana:id/(name removed)' and @text='TRY AGAIN']");
-    private By invalidEmailOk = By.xpath("//android.widget.Button[@resource-id='com.facebook.katana:id/(name removed)']");
+    private By emptyFieldsMsg = MobileBy.AndroidUIAutomator(
+            "new UiSelector().text(\"Enter your email or mobile number to log in\")");
+    private By emptyFieldsOkBtn = MobileBy.AndroidUIAutomator("new UiSelector().text(\"OK\")");
 
-    // Home page element for assertion
-    private By homePageElement = By.xpath("//android.view.View[@content-desc='Home, tab 1 of 6']"); // updated xpath
-    
-    private By uniqueAfterInvalidPassPage = By.xpath("//android.view.View[@content-desc='The password you entered is incorrect.']"); // example
+    private By incorrectPasswordMsg = MobileBy.AccessibilityId("The password you entered is incorrect.");
+    private By backFromInvalidPassword = MobileBy.AndroidUIAutomator(
+            "new UiSelector().className(\"android.widget.ImageView\").instance(3)");
 
+    private By incorrectPasswordBox = MobileBy.AndroidUIAutomator(
+            "new UiSelector().text(\"Incorrect Password\")");
+    private By incorrectPasswordOk = MobileBy.AndroidUIAutomator("new UiSelector().text(\"OK\")");
 
-    // Actions
+    private By bothInvalidMsg = MobileBy.AndroidUIAutomator(
+            "new UiSelector().textContains(\"isn't connected to an account\")");
+    private By bothInvalidTryAgain = MobileBy.AndroidUIAutomator("new UiSelector().text(\"TRY AGAIN\")");
+
+    private By invalidEmailOk = MobileBy.AndroidUIAutomator("new UiSelector().text(\"OK\")");
+
     public void clickAlreadyHaveAccount() {
         wait.until(ExpectedConditions.elementToBeClickable(alreadyHaveAccount)).click();
     }
 
     public void enterEmail(String email) {
-        MobileElement emailInput = (MobileElement) wait.until(ExpectedConditions.visibilityOfElementLocated(emailField));
+        MobileElement emailInput = (MobileElement) wait.until(
+                ExpectedConditions.visibilityOfElementLocated(emailField));
         emailInput.clear();
         emailInput.sendKeys(email);
     }
 
     public void enterPassword(String password) {
-        MobileElement passInput = (MobileElement) wait.until(ExpectedConditions.visibilityOfElementLocated(passwordField));
+        MobileElement passInput = (MobileElement) wait.until(
+                ExpectedConditions.visibilityOfElementLocated(passwordField));
         passInput.clear();
         passInput.sendKeys(password);
     }
@@ -59,35 +69,64 @@ public class LoginPage {
         driver.findElement(passwordField).clear();
     }
 
-    // Handle scenarios
-    public void handleInvalidPassword() {
+    public boolean isEmptyFieldsMsgDisplayed() {
         try {
-            // wait for unique page element
-            wait.until(ExpectedConditions.visibilityOfElementLocated(uniqueAfterInvalidPassPage));
-            // only then click back button
-            MobileElement backButton = (MobileElement) wait.until(ExpectedConditions.elementToBeClickable(invalidPasswordBack));
-            backButton.click();
+            return wait.until(ExpectedConditions.visibilityOfElementLocated(emptyFieldsMsg)).isDisplayed();
         } catch (Exception e) {
-            // page not displayed, do nothing
+            return false;
         }
     }
 
-    public void handleBothInvalid() {
+    public void clickEmptyFieldsOk() {
+        wait.until(ExpectedConditions.elementToBeClickable(emptyFieldsOkBtn)).click();
+    }
+
+    public boolean isIncorrectPasswordDisplayed() {
         try {
-            MobileElement tryAgainBtn = (MobileElement) wait.until(ExpectedConditions.elementToBeClickable(bothInvalidTryAgain));
-            tryAgainBtn.click();
+            return wait.until(ExpectedConditions.visibilityOfElementLocated(incorrectPasswordMsg)).isDisplayed();
         } catch (Exception e) {
-            // Not displayed
+            return false;
         }
     }
 
-    public void handleInvalidEmail() {
+    public void clickBackFromInvalidPassword() {
+        wait.until(ExpectedConditions.elementToBeClickable(backFromInvalidPassword)).click();
+    }
+
+    public boolean isIncorrectPasswordBoxDisplayed() {
         try {
-            MobileElement okBtn = (MobileElement) wait.until(ExpectedConditions.elementToBeClickable(invalidEmailOk));
-            okBtn.click();
+            return wait.until(ExpectedConditions.visibilityOfElementLocated(incorrectPasswordBox)).isDisplayed();
         } catch (Exception e) {
-            // Not displayed
+            return false;
         }
+    }
+
+    public void clickIncorrectPasswordOk() {
+        wait.until(ExpectedConditions.elementToBeClickable(incorrectPasswordOk)).click();
+    }
+
+    public boolean isBothInvalidMsgDisplayed() {
+        try {
+            return wait.until(ExpectedConditions.visibilityOfElementLocated(bothInvalidMsg)).isDisplayed();
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public void clickBothInvalidTryAgain() {
+        wait.until(ExpectedConditions.elementToBeClickable(bothInvalidTryAgain)).click();
+    }
+
+    public boolean isInvalidEmailOkDisplayed() {
+        try {
+            return wait.until(ExpectedConditions.visibilityOfElementLocated(invalidEmailOk)).isDisplayed();
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public void clickInvalidEmailOk() {
+        wait.until(ExpectedConditions.elementToBeClickable(invalidEmailOk)).click();
     }
 
     public boolean isHomePageDisplayed() {
