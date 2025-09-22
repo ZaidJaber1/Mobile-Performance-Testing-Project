@@ -196,7 +196,7 @@ public class EventTest extends BaseTest {
 
 	@DataProvider(name = "eventData")
 	public Iterator<Object[]> readEventData() throws IOException {
-		String filePath = "src/test/testdata/eventData.csv";
+		String filePath = "src/test/Resources/eventData.csv";
 		BufferedReader reader = new BufferedReader(new FileReader(filePath));
 		String line;
 		ArrayList<Object[]> data = new ArrayList<>();
