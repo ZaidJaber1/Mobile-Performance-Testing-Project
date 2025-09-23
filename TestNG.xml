@@ -5,7 +5,10 @@
     <test name="Tests">
         <classes>
             <class name="MobileTesting.FacebookApp.Tests.LoginTest"/>
+            <class name="MobileTesting.FacebookApp.Tests.PostTest"/>
+            <class name="MobileTesting.FacebookApp.Tests.FriendsTest"/>
             <class name="MobileTesting.FacebookApp.Tests.EventTest"/>
+          
         </classes>
     </test>
 
